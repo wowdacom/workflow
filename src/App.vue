@@ -1,8 +1,8 @@
 <template>
   <div id="app">
     <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link>
+      <router-link to="/">D3.js Terms</router-link> |
+      <router-link to="/about">GSAP Terms</router-link>
     </div>
     <router-view/>
   </div>
