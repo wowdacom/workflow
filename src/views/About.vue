@@ -1,6 +1,6 @@
 <template>
   <div class="about">
-    <div class="contorl" @click="handleAni">
+    <!-- <div class="contorl" @click="handleAni">
       PLAY
     </div>
     <div class="icon icon1">
@@ -17,8 +17,15 @@
             C213.971,216.658,216.658,213.971,216.658,210.658z"/>
         </g>
       </svg>
+    </div> -->
+    <div class="square">
+      <div class="people">
+        <div class="person" :class="[ item ? 'reveal' : 'unreveal' ]" :key="index" v-for="(item, index) in currentPeople">
+
+        </div>
+      </div>
     </div>
-    
+    <div @click="burnIt" class="burn"><div class="inner">BURN IT!</div></div>
   </div>
 </template>
 <script>
@@ -28,7 +35,10 @@ export default {
   name: 'about',
   data () {
     return {
-      isPlay: false
+      isPlay: false,
+      currentPeople: null,
+      lack: [],
+      isWither: false
     }
   },
   components: {
@@ -47,6 +57,59 @@ export default {
       .from(element, 1, { x: 0, y: 0 })
       .to(element, 1, { x: horizontal, y: vertical })
       return tl
+    },
+    getRandomArray (minNum, maxNum, n) {    //隨機產生不重覆的n個數字
+        var rdmArray = [n];     //儲存產生的陣列
+
+        for(var i=0; i<n; i++) {
+            var rdm = 0;        //暫存的亂數
+
+            do {
+                var exist = false;          //此亂數是否已存在
+                rdm = this.getRandom(minNum, maxNum);    //取得亂數
+                
+                //檢查亂數是否存在於陣列中，若存在則繼續回圈
+                if(rdmArray.indexOf(rdm) != -1) exist = true;
+                
+            } while (exist);    //產生沒出現過的亂數時離開迴圈
+            
+            rdmArray[i] = rdm;
+        }
+        return rdmArray.sort(function(a, b){return a-b});
+    },
+    getRandom(minNum, maxNum) { //取得 minNum(最小值) ~ maxNum(最大值) 之間的亂數
+        return Math.floor( Math.random() * (maxNum - minNum + 1) ) + minNum;
+    },
+    burnIt() {
+      let tl = new TimelineMax();
+      let animation = tl.staggerFromTo(".unreveal", 1, {
+        scale: 1,
+        y: 0,
+        ease: Power1.easeInOut,
+        stagger: {
+          grid: [15,7],
+          from: "center",
+          amount: 2
+        }
+      }, {
+        scale: function () {
+          return Math.random()
+        },
+        y: 40,
+        ease: Power1.easeInOut,
+        stagger: {
+          grid: [15,7],
+          from: "center",
+          amount: 2
+        }
+      });
+
+      if (this.isWither) {
+        animation.reversed()
+      } else {
+        animation.play()
+      }
+      this.isWither = !this.isWither
     },
     handleAni () {
       let master = new TimelineMax();
@@ -67,8 +130,19 @@ export default {
       // animation.reversed( !animation.reversed() );
     }
   },
+  created () {
+    this.currentPeople = Array(200).fill(false);
+    this.lack = [ ...this.getRandomArray(0, 200, 40) ]
+    this.lack.forEach((item)=>{
+      this.currentPeople[item] = true
+    })
+  },
   mounted () {
+
     
+
+    
+
   }
 }
 </script>
@@ -84,6 +158,38 @@ export default {
     .icon {
       margin: 100px auto;
       width: 100px;
+    }
+    .people {
+      margin: 0 auto;
+      .person {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        border: solid 1px goldenrod;
+        background-color: yellow;
+        margin: 10px;
+        display: inline-block;
+
+      }
+    }
+    .burn {
+      margin: 50px auto;
+      width: 100px;
+      height: 50px;
+      border-radius: 5px;
+      background-color: black;
+      color: white;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 32.5px 6px;
+      cursor: pointer;
+      .inner {
+        width: 95%;
+        line-height: 45px;
+        border-radius: inherit;
+        border: solid 2px white;
+      }
     }
   }
 </style>

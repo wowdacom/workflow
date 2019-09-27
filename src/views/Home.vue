@@ -1,5 +1,6 @@
 <template>
   <div class="home">
+    <Share href="http://nmdap.udn.com.tw/test/workflow/"></Share>
     <div class="scene">
       <div id="chart"></div>
     </div>
@@ -9,6 +10,7 @@
 <script>
 // @ is an alias to /src
 import HelloWorld from '@/components/HelloWorld.vue'
+import Share from '@/components/Share.vue'
 import * as d3 from "d3";
 import myCSV from "@/assets/example.csv"
 
@@ -21,7 +23,8 @@ export default {
     }
   },
   components: {
-    HelloWorld
+    HelloWorld,
+    Share
   },
   methods: {
     fetchData(){
