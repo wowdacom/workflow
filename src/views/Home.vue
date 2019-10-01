@@ -68,7 +68,7 @@ export default {
                   .append("svg")   
                   .attr("width", w)   
                   .attr("height", h);   
-          
+      
       //Set up groups   
       var arcs = svg.selectAll("g.arc")   
                     .data(pie(dataset))   

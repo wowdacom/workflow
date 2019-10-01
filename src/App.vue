@@ -2,7 +2,8 @@
   <div id="app">
     <div id="nav">
       <router-link to="/">D3.js Terms</router-link> |
-      <router-link to="/about">GSAP Terms</router-link>
+      <router-link to="/about">GSAP Terms</router-link> |
+      <router-link to="/advance">GSAP Terms Advance</router-link>
     </div>
     <router-view/>
   </div>

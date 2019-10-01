@@ -81,8 +81,9 @@ export default {
         return Math.floor( Math.random() * (maxNum - minNum + 1) ) + minNum;
     },
     burnIt() {
+      console.log(this.lack)
       let tl = new TimelineMax();
-      let animation = tl.staggerFromTo(".unreveal", 1, {
+      let animation = tl.staggerFromTo(".reveal", 1, {
         scale: 1,
         y: 0,
         ease: Power1.easeInOut,
