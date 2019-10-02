@@ -1,7 +1,9 @@
 <template>
   <div class="advance">
-    <h1>Hello Advance</h1>
-    <div id="list">
+    <h1>讓我動起來</h1>
+    <div class="ball"></div>
+    <div @click="handleBall" class="controller shuffle-btn">CONTROLLER</div>
+    <!-- <div id="list">
       <transition-group name="cell" tag="div" class="container">
         <div class="tile" :label="index + 1 " :key="index" v-for="(item, index) in cells" >
             {{ item.number }}
@@ -9,11 +11,12 @@
       </transition-group>
     </div>
     <div @click="handleShuffle" class="shuffle-btn">Shuffle It!</div>
-    <div @click="handleLeaking" class="shuffle-btn">remove It</div>
+    <div @click="handleLeaking" class="shuffle-btn">remove It</div> -->
   </div>
 </template>
 <script>
 import { TimelineMax } from "gsap";
+import TWEEN from 'tween.js'
 import _shuffle from 'lodash.shuffle'
 
 export default {
@@ -77,6 +80,9 @@ export default {
     },
     getRandom(minNum, maxNum) { //取得 minNum(最小值) ~ maxNum(最大值) 之間的亂數
         return Math.floor( Math.random() * (maxNum - minNum + 1) ) + minNum;
+    },
+    handleBall () {
+
     }
   },
   created () {
@@ -90,15 +96,22 @@ export default {
 <style lang="scss" scoped>
   .advance {
     #list {
+        margin : 50px auto;
         // background-color: rgba(0, 0, 0, 0.2);
-        width: 250px;
+        width: 50%;
         // width: 90%;
         // width: 0;
         position: relative;
         display: block;
-        margin-top: 50px;
     }
-
+    .ball {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: yellow;
+      border: solid 1px black;
+      margin: 200px auto;
+    }
     .tile {
         display: inline-block;
         background-color: yellowgreen;
@@ -106,16 +119,23 @@ export default {
         padding: 5px;
         font-weight: bold;
         margin: 5px;
+        border-radius: 50%;
     }
     .shuffle-btn {
       border: solid 1px yellowgreen;
       border-radius: 5px;
-      width: 100px;
+      width: 150px;
       line-height: 50px;
       margin: 0 auto;
     }
     .cell-move {
-      transition: transform 1s;
+      animation: move_wave 1s ease-in-out forwards;
+      // transition: transform 1s;
+    }
+    @keyframes move_wave {
+      50% {
+        transform: translate3D(100px, -100px, 0);
+      }
     }
   }
 </style>
