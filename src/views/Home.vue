@@ -16,6 +16,9 @@
       <div class="bars"></div>
       <div class="rule"></div>
     </div>
+    <div class="myScence4">
+      <p>CHART PART2</p>
+    </div>
     <!-- <Share href="http://nmdap.udn.com.tw/test/workflow/"></Share>
     <div class="scene">
       <div id="chart"></div>
