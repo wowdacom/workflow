@@ -293,7 +293,7 @@ export default {
     }
     .myScence3 {
       margin: 0 auto;
-      width: 600px;
+      width: 50%;
       height: 600px;
       margin: 50px;
       position: relative;
