@@ -22,6 +22,9 @@
     <div class="myScence5">
       <svg class="myChart2"></svg>
     </div>
+    <div class="myScence6">
+      <svg class="myChart3"></svg>
+    </div>
     <!-- <Share href="http://nmdap.udn.com.tw/test/workflow/"></Share>
     <div class="scene">
       <div id="chart"></div>
@@ -342,9 +345,9 @@ export default {
           return d.value
         })])
 
-        var barWidth = w / data.length;
+        let barWidth = w / data.length;
 
-        var bar = myChart.selectAll("g")
+        let bar = myChart.selectAll("g")
                     .data(data)
                     .enter().append("g")
                     .attr("transform", (d, i)=> { return "translate(" + i * barWidth  + ",0)" } )
@@ -352,7 +355,7 @@ export default {
 
             bar.append("rect")
                   .on("mouseenter", vm.handleMouseOver)
-                  .on("mouseover", vm.handleMouseOver)
+                  .on("mouseleave", vm.handleMouseOver)
                   .attr("id", (d, i)=>{
                     return "bar-" + i
                   })
@@ -366,7 +369,7 @@ export default {
                   .attr("fill", (d, i)=>{
                     return d3.schemeSet3[i]
                   })
-                  .attr("class", "bar")
+                  .attr("class", "chart2bar")
                   
             bar.append("text")
                   .attr("x", barWidth / 2 - 8)
@@ -380,20 +383,31 @@ export default {
                   })
 
       })
+
     },
-    handleMouseOver(state) {  // Add interactivity
-      console.log(d3.event)
+    handleMouseOver(state, element) {  // Add interactivity
+      console.log(d3.event.target)
       
       if (d3.event.type === "mouseenter") {
         d3.select('#' + d3.event.target.id)
         .attr("fill", "orange");
       }
-      if (d3.event.type === "mouseover") {
-        
+      if (d3.event.type === "mouseleave") {
+        d3.selectAll('.chart2bar')
+        .attr("fill", (d, i)=>{
+          return d3.schemeSet3[i]
+        });
       }
       // Use D3 to select element, change color and size
       
 
+    },
+    handleCircles () {
+      d3.select(".myChart3")
+        .attr("width", 500)
+        .attr("height", 500)
+        .append("circle")
+        .attr("cx", 25).attr("cy", 25).attr("r", 22).attr("fill", "blue").attr("stroke", "gray").attr("stroke-width", 2)
     }
   },
   mounted () {
@@ -401,6 +415,7 @@ export default {
     this.handleChart()
     this.handleChartSVG()
     this.handleChartSVGColumns()
+    this.handleCircles()
 
     //Width and height
             
