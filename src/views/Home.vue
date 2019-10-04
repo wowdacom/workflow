@@ -17,7 +17,10 @@
       <div class="rule"></div>
     </div>
     <div class="myScence4">
-      <p>CHART PART2</p>
+      <svg class="myChart"></svg>
+    </div>
+    <div class="myScence5">
+      <svg class="myChart2"></svg>
     </div>
     <!-- <Share href="http://nmdap.udn.com.tw/test/workflow/"></Share>
     <div class="scene">
@@ -32,6 +35,7 @@ import HelloWorld from '@/components/HelloWorld.vue'
 import Share from '@/components/Share.vue'
 import * as d3 from "d3";
 import myCSV from "@/assets/example.csv"
+import myData from "@/assets/myData.csv"
 
 export default {
   name: 'home',
@@ -40,7 +44,8 @@ export default {
       baseUrl: process.env.VUE_APP_BASE_URL,
       source: null,
       box: null,
-      myChartData: [{name:'Alex', score: 30}, {name:'Peter', score: 10},{name:'Alan', score: 40},{name:'Jim', score: 10},{name:'Brian', score: 50},{name:'Freddy', score: 90}]
+      jsonurl: "https://gist.githubusercontent.com/wowdacom/b22c4cd6a70e791ff9a62e06b5f77034/raw/83382070b4b9cd9bdb6dcaf76c147245298a0271/gistfile1.json",
+      myChartData: [{name:'Alex', score: 30}, {name:'Peter', score: 10},{name:'Alan', score: 40},{name:'Jim', score: 10},{name:'Brian', score: 50},{name:'Freddy', score: 90},{name:'Allen', score: 45}]
     }
   },
   components: {
@@ -254,13 +259,149 @@ export default {
         .style("background-color", (d, i) => {
           return "#" + (parseInt("BE5", 16) + d).toString(16);
         })
+    },
+    handleChartSVG () {
+      let vm  = this
+      let h = 50
 
+      d3.json(vm.jsonurl).then((data)=>{
+
+        let bars = d3.select(".myChart")
+            .attr("width", "50%")
+            .attr("height", h * data.length)
+            .selectAll("g")
+            .data(data)
+            .enter()
+            .append("g")
+            .attr("class", "bar-4")
+            .attr("transform", (d, i)=>{
+              return "translate(0," + i * h + ")"
+            })
+
+        let x = d3.scaleLinear()
+                  .domain([0, d3.max(data.map((d, i)=>{
+                    return d.value
+                  }))])
+                  .range([0, 500]);
+
+        bars.append("rect")
+          .attr("width", (d)=>{
+            return d.value * 5;
+          })
+          .attr("height", h  - 1)
+          .attr("fill", (d, i)=>{
+            return "#" + (parseInt("EBB", 16) + d.value).toString(16);
+          })
+
+        bars.append("text")
+            .attr("x", (d)=>{
+              return d.value * 5 - 30;
+            })
+            .attr("y", h / 2)
+            .attr("dy", ".35em")
+            .attr("fill", "white")
+            .text(function(d) { return d.value; });
+
+        bars.append("text")
+            .attr("x", (d)=>{
+              return d.value * 5 + 10;
+            })
+            .attr("y", h / 2)
+            .attr("dy", ".35em")
+            .attr("fill", "green")
+            .text(function(d) { return d.name; });
+
+      })
+     
+    },
+    handleChartSVGColumns () {
+
+      let vm  = this
+      let w = 500
+      let h = 500
+
+
+
+      // .rangeRoundBands 
+      let x = d3.scaleBand()
+                 .rangeRound([0, w], .1);
+
+      let y = d3.scaleLinear()
+                  .range([0, h]);
+
+      let xAxis = d3.axisBottom(x);
+              
+      let myChart = d3.select(".myChart2")
+        .attr("width", w)
+        .attr("height", h)
+
+      //會用domain 對應 range 是因為要讓最長的那隻剛好撐滿整個圖表
+      d3.json(vm.jsonurl).then((data)=>{
+
+        y.domain([0, d3.max(data, (d)=>{
+          return d.value
+        })])
+
+        var barWidth = w / data.length;
+
+        var bar = myChart.selectAll("g")
+                    .data(data)
+                    .enter().append("g")
+                    .attr("transform", (d, i)=> { return "translate(" + i * barWidth  + ",0)" } )
+                    .call(xAxis);
+
+            bar.append("rect")
+                  .on("mouseenter", vm.handleMouseOver)
+                  .on("mouseover", vm.handleMouseOver)
+                  .attr("id", (d, i)=>{
+                    return "bar-" + i
+                  })
+                  .attr("y", (d)=>{
+                    return h - y(d.value)
+                  })
+                  .attr("height", (d)=>{
+                    return y(d.value)
+                  })
+                  .attr("width", barWidth - 1)
+                  .attr("fill", (d, i)=>{
+                    return d3.schemeSet3[i]
+                  })
+                  .attr("class", "bar")
+                  
+            bar.append("text")
+                  .attr("x", barWidth / 2 - 8)
+                  .attr("y", (d)=>{
+                    return h - y(d.value) + 25;
+                  })
+                  .attr("fill", "black")
+                  .attr("d", ".75em")
+                  .text((d)=>{
+                    return d.value
+                  })
+
+      })
+    },
+    handleMouseOver(state) {  // Add interactivity
+      console.log(d3.event)
+      
+      if (d3.event.type === "mouseenter") {
+        d3.select('#' + d3.event.target.id)
+        .attr("fill", "orange");
+      }
+      if (d3.event.type === "mouseover") {
+        
+      }
+      // Use D3 to select element, change color and size
+      
 
     }
   },
   mounted () {
     this.handleBubbles()
     this.handleChart()
+    this.handleChartSVG()
+    this.handleChartSVGColumns()
+
     //Width and height
             
                
@@ -280,29 +421,24 @@ export default {
     justify-content: center;
     align-items: center;
     flex-flow: column;
-    height: 100vh;
     .myScence {
       margin: 0 auto;
       width: 500px;
-      height: 500px;
       border: solid 1px yellowgreen;
     }
     .myScence2 {
       margin: 0 auto;
       width: 400px;
-      height: 400px;
       // border: solid 1px blueviolet;
       margin: 50px;
     }
     .myScence3 {
       margin: 0 auto;
       width: 50%;
-      height: 600px;
       margin: 50px;
       position: relative;
       .bars {
         width: 100%;
-        height: 100%;
       }
       .rule {
         position: absolute;
@@ -313,6 +449,29 @@ export default {
         background-color: black;
       }
     }
+    .myScence4 {
+      width: 100%;
+      margin: 100px;
+      .myChart {
+        border: solid 1px goldenrod;
+        .bar-4 {
+          rect {
+            fill: steelblue;
+          }
+          text {
+            fill: white;
+            font: 10px sans-serif;
+            text-anchor: end;
+          }
+        }
+        
+      }
+    }
+    
+    .myScence5 {
+      border: solid 1px paleturquoise;
+    }
+
     .scene {
       width: 500px;
       // border: solid 1px greenyellow;
