@@ -36,7 +36,7 @@
 // @ is an alias to /src
 import HelloWorld from '@/components/HelloWorld.vue'
 import Share from '@/components/Share.vue'
-import * as d3 from "d3";
+import * as d3 from "d3"
 import myCSV from "@/assets/example.csv"
 import myData from "@/assets/myData.csv"
 

@@ -23,6 +23,11 @@ export default new Router({
       path: '/advance',
       name: 'advance',
       component: () => import(/* webpackChunkName: "about" */ './views/Advance.vue')
+    },
+    {
+      path: '/statistic',
+      name: 'statistic',
+      component: ()=> import('./views/Statistic.vue')
     }
   ]
 })

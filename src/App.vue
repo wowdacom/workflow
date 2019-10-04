@@ -3,7 +3,8 @@
     <div id="nav">
       <router-link to="/">D3.js Terms</router-link> |
       <router-link to="/about">GSAP Terms</router-link> |
-      <router-link to="/advance">GSAP Terms Advance</router-link>
+      <router-link to="/advance">GSAP Terms Advance</router-link> |
+      <router-link to="/statistic">Homework of statistic</router-link>
     </div>
     <router-view/>
   </div>
