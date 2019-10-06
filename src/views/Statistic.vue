@@ -1,6 +1,6 @@
 <template>
   <div class="statistic">
-   
+      <div class="myScene10"></div>
   </div>
 </template>
 <script>
@@ -25,6 +25,20 @@ export default {
         return d3.json(vm.myurl).then((data)=>{
           vm.rawData = _flattendeep(data)
         })
+    },
+    barChart () {
+        let vm = this
+        d3.select(".myScene10")
+            .selectAll("div")
+            .data(vm.collectedData)
+            .enter()
+            .append("div")
+            .style("width", (d, i)=>{
+                return +d.length * 10 + "px"
+            })
+            .style("height", "50px")
+            .style("border", "solid 1px white")
+            .style("background-color", "black")
     }
   },
   created () {
@@ -55,12 +69,17 @@ export default {
               counter = counter + 1
           }
       }).then(()=>{
-          console.log(vm.collectedData)
+          vm.barChart()
       })
       
   }
 }
 </script>
 <style lang="scss" scoped>
-
+    .myScene10 {
+        margin: 0 auto;
+        border: solid 1px green;
+        width: 500px;
+        height: 500px;
+    }
 </style>

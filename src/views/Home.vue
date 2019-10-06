@@ -25,6 +25,9 @@
     <div class="myScence6">
       <svg class="myChart3"></svg>
     </div>
+    <div class="myScence7">
+      <div :style="{transform: 'translate(' + myPosition + 'px)'}" class="ball"></div>
+    </div>
     <!-- <Share href="http://nmdap.udn.com.tw/test/workflow/"></Share>
     <div class="scene">
       <div id="chart"></div>
@@ -44,6 +47,7 @@ export default {
   name: 'home',
   data () {
     return {
+      currentHeight: 0,
       baseUrl: process.env.VUE_APP_BASE_URL,
       source: null,
       box: null,
@@ -411,11 +415,15 @@ export default {
     }
   },
   mounted () {
+    let vm =this
     this.handleBubbles()
     this.handleChart()
     this.handleChartSVG()
     this.handleChartSVGColumns()
     this.handleCircles()
+    window.addEventListener('scroll', function(){
+      vm.currentHeight = window.pageYOffset
+    })
 
     //Width and height
             
@@ -427,6 +435,12 @@ export default {
             //Labels   
             
 
+  },
+  computed: {
+    myPosition () {
+      let vm = this
+      return Math.cos(Math.PI * vm.currentHeight/180) * 500
+    }
   }
 }
 </script>
@@ -485,6 +499,17 @@ export default {
     
     .myScence5 {
       border: solid 1px paleturquoise;
+    }
+
+    .myScence7 {
+      .ball {
+        position: fixed;
+        top: 50%;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background-color: red;
+      }
     }
 
     .scene {
