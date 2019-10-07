@@ -28,6 +28,9 @@
     <div class="myScence7">
       <div :style="{transform: 'translate(' + myPosition + 'px)'}" class="ball"></div>
     </div>
+    <div class="myScence8">
+      <div v-for="(item, index) in 10" :key="index"  class="ball"></div>
+    </div>
     <!-- <Share href="http://nmdap.udn.com.tw/test/workflow/"></Share>
     <div class="scene">
       <div id="chart"></div>
@@ -412,6 +415,9 @@ export default {
         .attr("height", 500)
         .append("circle")
         .attr("cx", 25).attr("cy", 25).attr("r", 22).attr("fill", "blue").attr("stroke", "gray").attr("stroke-width", 2)
+    },
+    handleYellowCircle () {
+      
     }
   },
   mounted () {
@@ -509,6 +515,22 @@ export default {
         height: 100px;
         border-radius: 50%;
         background-color: red;
+      }
+    }
+
+    .myScence8 {
+      position: relative;
+      width: 1000px;
+      height:1000px;
+      .ball {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background-color: yellow;
       }
     }
 

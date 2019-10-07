@@ -1,8 +1,11 @@
 <template>
   <div class="advance">
     <h1>讓我動起來</h1>
-    <div class="ball"></div>
-    <div @click="handleBall" class="controller shuffle-btn">CONTROLLER</div>
+    <div class="scence10">
+      
+    </div>
+    <div :style="{ transform: 'translate('+ ballX+'px,' + ballY+ 'px)'}" class="ball">AA</div>
+    <div @click="handleBall"  class="controller shuffle-btn">CONTROLLER</div>
     <!-- <div id="list">
       <transition-group name="cell" tag="div" class="container">
         <div class="tile" :label="index + 1 " :key="index" v-for="(item, index) in cells" >
@@ -27,6 +30,10 @@ export default {
         removeList: [],
         numTiles: 25,
         isSorted: false,
+        ballX: 0,
+        ballY: 0,
+        currentState: 0,
+        stateTrack: [{ x: 0, y: 0 }, { x: 180, y: 0 }, { x: 180, y: 180 }, { x: 0, y: 180 }],
         cells: Array.apply(null, { length: elements })
     	.map(function (_, index) { 
             return {
@@ -38,6 +45,11 @@ export default {
   },
   components: {
     
+  },
+  watch: {
+    // ballX (val) {
+    //   console.log(val)
+    // }
   },
   methods: {
     handleShuffle () {
@@ -81,7 +93,39 @@ export default {
     getRandom(minNum, maxNum) { //取得 minNum(最小值) ~ maxNum(最大值) 之間的亂數
         return Math.floor( Math.random() * (maxNum - minNum + 1) ) + minNum;
     },
+    animate(time) {
+      let vm = this
+        requestAnimationFrame(vm.animate);
+        TWEEN.update(time);
+    },
     handleBall () {
+      console.log("hello")
+      let vm = this
+      let position = this.stateTrack[vm.currentState]
+      let tween = new TWEEN.Tween(position)
+                        .to(vm.stateTrack[vm.currentState + 1], 1000)
+                        .onUpdate(function() {
+                            if (vm.currentState == 0 || vm.currentState == 2) {
+                              vm.ballX = Math.cos(this.x*Math.PI/180) * 50
+                              vm.ballY = this.x * 2
+                            } else {
+                              vm.ballX = this.y * 2
+                              vm.ballY = Math.cos(this.y*Math.PI/180) * 50
+                            }
+                            
+                        })
+                        .start()
+                        .onComplete(function(){
+                          if (vm.currentState + 1 < vm.stateTrack.length) {
+                            vm.currentState = vm.currentState + 1
+                          } else {
+                             vm.currentState = 0
+                          }
+                        })
+      this.animate();
+      
+    },
+    updatePosition () {
 
     }
   },
@@ -95,6 +139,7 @@ export default {
 </script>
 <style lang="scss" scoped>
   .advance {
+    position: relative;
     #list {
         margin : 50px auto;
         // background-color: rgba(0, 0, 0, 0.2);
@@ -104,13 +149,19 @@ export default {
         position: relative;
         display: block;
     }
+    .scence10 {
+      width: 1000px;
+      height: 1000px;
+    }
     .ball {
+      position: absolute;
       width: 50px;
       height: 50px;
       border-radius: 50%;
       background-color: yellow;
       border: solid 1px black;
-      margin: 200px auto;
+      left: 50%;
+      top: 50%;
     }
     .tile {
         display: inline-block;
@@ -127,6 +178,7 @@ export default {
       width: 150px;
       line-height: 50px;
       margin: 0 auto;
+      cursor: pointer;
     }
     .cell-move {
       animation: move_wave 1s ease-in-out forwards;
