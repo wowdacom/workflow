@@ -28,6 +28,11 @@ export default new Router({
       path: '/statistic',
       name: 'statistic',
       component: ()=> import('./views/Statistic.vue')
+    },
+    {
+      path: '/canvas',
+      name: 'canvas',
+      component: ()=> import('./views/CanvasWay.vue')
     }
   ]
 })

@@ -21,6 +21,7 @@
 import { TimelineMax } from "gsap";
 import TWEEN from 'tween.js'
 import _shuffle from 'lodash.shuffle'
+import EasyStar from 'easystarjs'
 
 export default {
   name: 'about',
@@ -35,12 +36,12 @@ export default {
         currentState: 0,
         stateTrack: [{ x: 0, y: 0 }, { x: 180, y: 0 }, { x: 180, y: 180 }, { x: 0, y: 180 }],
         cells: Array.apply(null, { length: elements })
-    	.map(function (_, index) { 
-            return {
-                id: index,
-                number: index + 1
-            }
-        })
+                      .map(function (_, index) { 
+                            return {
+                                id: index,
+                                number: index + 1
+                            }
+                        })
     }
   },
   components: {
@@ -69,7 +70,7 @@ export default {
         this.cells.splice(this.removeList[0], 1)
         this.removeList.shift()
       }
-      console.log(this.cells)
+      // console.log(this.cells)
     },
     getRandomArray (minNum, maxNum, n) {
       var rdmArray = [n];     //儲存產生的陣列
@@ -99,7 +100,7 @@ export default {
         TWEEN.update(time);
     },
     handleBall () {
-      console.log("hello")
+
       let vm = this
       let position = this.stateTrack[vm.currentState]
       let tween = new TWEEN.Tween(position)
@@ -125,6 +126,40 @@ export default {
       this.animate();
       
     },
+    handleGrid () {
+      let grid = [[0,0,1,0,0],
+                  [0,0,1,0,0],
+                  [0,0,1,0,0],
+                  [0,0,1,0,0],
+                  [0,0,0,0,0]];
+
+      let gridnew = [[0,0,0,0,0],
+                 [0,0,0,0,0],
+                 [0,0,0,0,0],
+                 [0,0,0,0,0],
+                 [0,0,0,0,0]];
+
+      let easystar = new EasyStar.js();
+      easystar.setGrid(grid);
+      easystar.setAcceptableTiles([0])
+      easystar.findPath(0, 0, 4, 2, function( path ) {
+        if (path === null) {
+          console.log("Path was not found.");
+        } else {
+          for (var i = 0; i < path.length; i++)
+              {
+                gridnew[path[i].y][path[i].x] = 1
+                // console.log("P: " + i + 
+                //             ", X: " + path[i].x + 
+                //             ",Y: " + path[i].y);
+              }
+          console.log(gridnew)
+        }
+      });
+      easystar.setIterationsPerCalculation(1000);
+      easystar.calculate();
+    }
+    ,
     updatePosition () {
 
     }
@@ -133,7 +168,8 @@ export default {
 
   },
   mounted () {
-      console.log(this.cells)
+      // console.log(this.cells)
+      this.handleGrid()
   }
 }
 </script>
